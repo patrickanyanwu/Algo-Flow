@@ -101,7 +101,7 @@ export function Nav({
             }}
           />
           <Select
-            label="Graph"
+            label="Algorithm"
             value={algorithm}
             isDisabled={isDisabled}
             options={PATHFINDING_ALGORITHMS}
