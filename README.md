@@ -69,3 +69,7 @@ https://github.com/user-attachments/assets/6bc3e608-74dc-41b7-b65d-55f630c674b4
 - **Description**: Recursively divides the grid into sections with walls and openings. Creates visually interesting and solvable mazes.
 
 ---
+
+### Acknowledgements
+
+Big thanks to TechPrep for his incredible tutorials on different aspects of constructing grids and implementing algorithms on grids.
