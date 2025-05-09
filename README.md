@@ -9,9 +9,6 @@
 - **Vite**
 - **Tailwind CSS**
 
-## Demo Video
-
-[Click here to watch the demo](./demo.mp4)
 ---
 
 ## Features
