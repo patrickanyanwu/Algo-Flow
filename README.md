@@ -27,7 +27,7 @@
 
 ## 🌐 Live Demo
 
-[Try it now](algoflow-patricka.netlify.app)
+[Try it now](https://algoflow-patricka.netlify.app/)
 
 ---
 
