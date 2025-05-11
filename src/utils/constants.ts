@@ -39,6 +39,7 @@ export const MAZES: MazeSelectType[] = [
   { name: "No Maze", value: "NONE" },
   { name: "Binary Tree", value: "BINARY_TREE" },
   { name: "Recursive Division", value: "RECURSIVE_DIVISION" },
+  { name: "Random Select", value: "RANDOM" },
 ];
 
 export const PATHFINDING_ALGORITHMS: AlgorithmSelectType[] = [

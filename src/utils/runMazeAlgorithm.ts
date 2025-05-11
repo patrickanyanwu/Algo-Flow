@@ -2,6 +2,7 @@ import { binaryTree } from "../lib/algorithms/maze/binaryTree";
 import recursiveDivision from "../lib/algorithms/maze/recursiveDivision";
 import { MAX_COLS, MAX_ROWS, SPEEDS } from "./constants";
 import { constructBorder } from "./constructBorder";
+import { getRandInt } from "./helpers";
 import { GridType, MazeType, SpeedType, TileType } from "./types";
 
 export const runMazeAlgorithm = async ({
@@ -19,9 +20,13 @@ export const runMazeAlgorithm = async ({
   setIsDisabled: (isDisabled: boolean) => void;
   speed: SpeedType;
 }) => {
-  if (maze == "BINARY_TREE") {
+  var random;
+  if (maze === "RANDOM") {
+    random = getRandInt(1, 3);
+  }
+  if (maze == "BINARY_TREE" || random === 1) {
     await binaryTree(grid, startTile, endTile, setIsDisabled, speed);
-  } else if (maze === "RECURSIVE_DIVISION") {
+  } else if (maze === "RECURSIVE_DIVISION" || random === 2) {
     const currentSpeed = SPEEDS.find((s) => s.value === speed)!.value ?? 2;
     await constructBorder(grid, startTile, endTile);
     await recursiveDivision({

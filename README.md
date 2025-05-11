@@ -55,6 +55,12 @@ https://github.com/user-attachments/assets/6bc3e608-74dc-41b7-b65d-55f630c674b4
 - **Guarantees Shortest Path**: ✅ (with admissible heuristic like Manhattan distance)
 - **How it works**: Like Dijkstra’s, but adds a **heuristic estimate** to prioritize nodes that are closer to the goal. Much faster.
 
+#### 🔹 Greedy Best-First Search  
+- **Type**: Heuristic-Only (Weighted)  
+- **Guarantees Shortest Path**: ❌  
+- **How it works**: Prioritizes nodes **purely based on their estimated distance to the goal** (heuristic). It ignores the actual cost to reach a node, making it faster but potentially inaccurate. Greedy is fast and visually efficient, but may take suboptimal paths. 
+
+
 ---
 
 ### Maze Generation Algorithms
