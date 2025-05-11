@@ -2,6 +2,7 @@ import { aStar } from "../lib/algorithms/pathfinding/aStar";
 import { bfs } from "../lib/algorithms/pathfinding/bfs";
 import { dfs } from "../lib/algorithms/pathfinding/dfs";
 import { dijkstra } from "../lib/algorithms/pathfinding/dijkstra";
+import { greedy } from "../lib/algorithms/pathfinding/greedy";
 import { AlgorithmType, GridType, TileType } from "./types";
 
 export const runPathfindingAlgorithm = ({
@@ -24,6 +25,8 @@ export const runPathfindingAlgorithm = ({
       return dijkstra(grid, startTile, endTile);
     case "A_STAR":
       return aStar(grid, startTile, endTile);
+    case "GREEDY":
+      return greedy(grid, startTile, endTile);
     default:
       return bfs(grid, startTile, endTile);
   }
