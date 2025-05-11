@@ -1,6 +1,7 @@
 import { getUntraversedNeighbors } from "../../../utils/getUntraversedNeighbors";
-import { dropFromQueue, isEqual } from "../../../utils/helpers";
+import { isEqual } from "../../../utils/helpers";
 import { initFunctionCost, initHeuristicCost } from "../../../utils/heuristics";
+import { MinHeapAstar } from "../../../utils/MinHeapAstar";
 import { GridType, TileType } from "../../../utils/types";
 
 export const aStar = (
@@ -8,50 +9,59 @@ export const aStar = (
   startTile: TileType,
   endTile: TileType
 ) => {
-  const traversedTiles = [];
+  const traversedTiles: TileType[] = [];
   const heuristicCost = initHeuristicCost(grid, endTile);
-  const functionCost = initFunctionCost();
-  const base = grid[startTile.row][startTile.col];
-  base.distance = 0;
-  functionCost[base.row][base.col] =
-    base.distance + heuristicCost[base.row][base.col];
-  base.isTraversed = true;
-  const untraversedTiles = [base];
+  const functionCost = initFunctionCost(); // f(n) = g(n) + h(n)
 
-  while (untraversedTiles.length > 0) {
-    untraversedTiles.sort((a, b) => {
-      if (functionCost[a.row][a.col] === functionCost[b.row][b.col]) {
-        return b.distance - a.distance;
-      }
-      return functionCost[a.row][a.col] - functionCost[b.row][b.col];
-    });
-    const currentTile = untraversedTiles.shift();
-    if (currentTile) {
-      if (currentTile.isWall) continue;
-      if (currentTile.distance === Infinity) break;
-      currentTile.isTraversed = true;
-      traversedTiles.push(currentTile);
-      if (isEqual(currentTile, endTile)) break;
+  const openSet = new MinHeapAstar<TileType>();
+  const inOpenSet = new Set<string>();
 
-      const neighbors = getUntraversedNeighbors(grid, currentTile);
-      for (let i = 0; i < neighbors.length; i += 1) {
-        const distanceToNeighbor = currentTile.distance + 1;
-        if (distanceToNeighbor < neighbors[i].distance) {
-          dropFromQueue(neighbors[i], untraversedTiles);
-          neighbors[i].distance = distanceToNeighbor;
-          functionCost[neighbors[i].row][neighbors[i].col] =
-            neighbors[i].distance +
-            heuristicCost[neighbors[i].row][neighbors[i].col];
-          neighbors[i].parent = currentTile;
-          untraversedTiles.push(neighbors[i]);
+  const start = grid[startTile.row][startTile.col];
+  start.distance = 0;
+  functionCost[start.row][start.col] =
+    start.distance + heuristicCost[start.row][start.col];
+
+  openSet.insert(start, functionCost[start.row][start.col]);
+  inOpenSet.add(`${start.row}-${start.col}`);
+
+  while (!openSet.isEmpty()) {
+    const current = openSet.extractMin()!;
+    const key = `${current.row}-${current.col}`;
+    inOpenSet.delete(key);
+
+    if (current.isWall || current.isTraversed) continue;
+
+    current.isTraversed = true;
+    traversedTiles.push(current);
+
+    if (isEqual(current, endTile)) break;
+
+    const neighbors = getUntraversedNeighbors(grid, current);
+    for (const neighbor of neighbors) {
+      if (neighbor.isWall || neighbor.isTraversed) continue;
+
+      const tentativeG = current.distance + 1;
+      const hCost = heuristicCost[neighbor.row][neighbor.col];
+      const fCost = tentativeG + hCost;
+
+      if (tentativeG < neighbor.distance) {
+        neighbor.distance = tentativeG;
+        neighbor.parent = current;
+        functionCost[neighbor.row][neighbor.col] = fCost;
+
+        const neighborKey = `${neighbor.row}-${neighbor.col}`;
+        if (!inOpenSet.has(neighborKey)) {
+          openSet.insert(neighbor, fCost);
+          inOpenSet.add(neighborKey);
         }
       }
     }
   }
 
-  const path = [];
+  // Build path
+  const path: TileType[] = [];
   let current = grid[endTile.row][endTile.col];
-  while (current !== null) {
+  while (current !== null && current.parent !== undefined) {
     current.isPath = true;
     path.unshift(current);
     current = current.parent!;

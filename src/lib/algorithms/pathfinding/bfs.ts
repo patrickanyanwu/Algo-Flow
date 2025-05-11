@@ -1,40 +1,45 @@
 import { getUntraversedNeighbors } from "../../../utils/getUntraversedNeighbors";
 import { isEqual } from "../../../utils/helpers";
-import { isInQueue } from "../../../utils/isInQueue";
 import { GridType, TileType } from "../../../utils/types";
+import { LinkedListQueue } from "../../../utils/LinkedListQueue";
 
 export const bfs = (grid: GridType, startTile: TileType, endTile: TileType) => {
   const traversedTiles: TileType[] = [];
+  const visitedSet = new Set<string>();
   const base = grid[startTile.row][startTile.col];
   base.distance = 0;
   base.isTraversed = true;
-  const unTraversed = [base];
 
-  while (unTraversed.length) {
-    const tile = unTraversed.shift() as TileType;
-    if (tile.isWall) continue;
-    if (tile.distance === Infinity) break;
-    tile.isTraversed = true;
-    traversedTiles.push(tile);
-    if (isEqual(tile, endTile)) break;
+  const queue = new LinkedListQueue<TileType>();
+  queue.enqueue(base);
+  visitedSet.add(`${base.row}-${base.col}`);
 
-    const neighbors = getUntraversedNeighbors(grid, tile);
-    for (let i = 0; i < neighbors.length; i += 1) {
-      if (!isInQueue(neighbors[i], unTraversed)) {
-        const nei = neighbors[i];
-        nei.distance = tile.distance + 1;
-        nei.parent = tile;
-        unTraversed.push(nei);
+  while (!queue.isEmpty()) {
+    const current = queue.dequeue()!;
+    traversedTiles.push(current);
+
+    if (isEqual(current, endTile)) break;
+
+    const neighbors = getUntraversedNeighbors(grid, current);
+    for (const neighbor of neighbors) {
+      const key = `${neighbor.row}-${neighbor.col}`;
+      if (!neighbor.isWall && !visitedSet.has(key)) {
+        neighbor.distance = current.distance + 1;
+        neighbor.parent = current;
+        neighbor.isTraversed = true;
+        queue.enqueue(neighbor);
+        visitedSet.add(key);
       }
     }
   }
 
-  const path = [];
+  const path: TileType[] = [];
   let tile = grid[endTile.row][endTile.col];
-  while (tile !== null) {
+  while (tile !== null && tile.parent !== undefined) {
     tile.isPath = true;
     path.unshift(tile);
     tile = tile.parent!;
   }
+
   return { traversedTiles, path };
 };
