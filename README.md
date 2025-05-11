@@ -16,10 +16,11 @@ https://github.com/user-attachments/assets/6bc3e608-74dc-41b7-b65d-55f630c674b4
 
 ## Features
 
-- **Visualize Pathfinding Algorithms**: BFS, DFS, Dijkstra's, and A* (with heuristics)
+- **Visualize Pathfinding Algorithms**: BFS, DFS, Greedy, Dijkstra's, and A* (with heuristics)
 - **Maze Generation**: Create walls manually or generate random mazes using:
   - Binary Tree algorithm
   - Recursive Division algorithm
+  - Random selection between them
 - **Adjustable Animation Speeds**: Choose between slow, medium, or fast
 - **Interactive UI**: Click to add/remove walls and reposition start/end tiles
 
