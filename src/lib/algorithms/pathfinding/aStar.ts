@@ -13,21 +13,21 @@ export const aStar = (
   const heuristicCost = initHeuristicCost(grid, endTile);
   const functionCost = initFunctionCost(); // f(n) = g(n) + h(n)
 
-  const openSet = new MinHeapAstar<TileType>();
-  const inOpenSet = new Set<string>();
+  const heap = new MinHeapAstar<TileType>();
+  const inheap = new Set<string>();
 
   const start = grid[startTile.row][startTile.col];
   start.distance = 0;
   functionCost[start.row][start.col] =
     start.distance + heuristicCost[start.row][start.col];
 
-  openSet.insert(start, functionCost[start.row][start.col]);
-  inOpenSet.add(`${start.row}-${start.col}`);
+  heap.insert(start, functionCost[start.row][start.col]);
+  inheap.add(`${start.row}-${start.col}`);
 
-  while (!openSet.isEmpty()) {
-    const current = openSet.extractMin()!;
+  while (!heap.isEmpty()) {
+    const current = heap.extractMin()!;
     const key = `${current.row}-${current.col}`;
-    inOpenSet.delete(key);
+    inheap.delete(key);
 
     if (current.isWall || current.isTraversed) continue;
 
@@ -50,9 +50,9 @@ export const aStar = (
         functionCost[neighbor.row][neighbor.col] = fCost;
 
         const neighborKey = `${neighbor.row}-${neighbor.col}`;
-        if (!inOpenSet.has(neighborKey)) {
-          openSet.insert(neighbor, fCost);
-          inOpenSet.add(neighborKey);
+        if (!inheap.has(neighborKey)) {
+          heap.insert(neighbor, fCost);
+          inheap.add(neighborKey);
         }
       }
     }
